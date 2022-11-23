@@ -15,17 +15,17 @@
 
 **Npm**
 ```
-$ npm install @js-lion/api
+$ npm install @js-lion/api lodash-es axios
 ```
 
 **yarn**
 ```
-$ yarn add @js-lion/api
+$ yarn add @js-lion/api lodash-es axios
 ```
 
 **pnpm**
 ```
-$ pnpm install @js-lion/api
+$ pnpm install @js-lion/api lodash-es axios
 ```
 
 **可以通过 import 导入方式使用**
