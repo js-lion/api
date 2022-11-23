@@ -1,0 +1,10 @@
+src
+.git
+.idea
+.DS_Store
+.vscode
+.gitignore
+vite.config.ts
+pnpm-lock.yaml
+tsconfig.json
+tsconfig.node.json
