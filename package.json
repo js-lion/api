@@ -1,7 +1,7 @@
 {
   "name": "@js-lion/api",
   "private": false,
-  "version": "0.1",
+  "version": "0.0.1",
   "description": "简化 Http 请求, 不会对 Axios 做任何改变",
   "main": "dist/api.js",
   "type": "module",
