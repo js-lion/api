@@ -6,7 +6,6 @@
 import _ from "lodash-es";
 import AxiosHttp from "axios";
 import * as template from "./template";
-import { useAsyncState, UseAsyncStateOptions } from "@vueuse/core";
 import type { Axios, AxiosRequestConfig, AxiosResponse } from "axios";
 
 type reqCallback = (req: AxiosRequestConfig) => AxiosRequestConfig;
@@ -88,7 +87,7 @@ class Basis {
   }
 }
 
-export class Http extends Basis{
+export default class API extends Basis{
   public axios: Axios;
   constructor(config: AxiosRequestConfig = {}, env = {}) {
     super(env);
@@ -127,35 +126,5 @@ export class Http extends Basis{
 
   request<T = any, R = AxiosResponse<T>, D = any>(config: AxiosRequestConfig<D>) {
     return this.axios.request<T, R, D>(config);
-  }
-}
-
-
-export class useState {
-  // 获取数据
-  static data<T = any, Shallow extends boolean = true>(
-    api: Promise<T> | ((...args: any[]) => Promise<T>), 
-    initialState?: T, 
-    options?: UseAsyncStateOptions<Shallow>
-  ) {
-    const app = async function(...args: any[]) {
-      if (_.isFunction(api)) {
-        return api(...args);
-      }
-      return Promise.resolve(api);
-    };
-    // @ts-ignore
-    return useAsyncState<T>(app, initialState || {}, options);
-  }
-  // 获取列表数据
-  static dataExecute<T = any, Shallow extends boolean = true>(
-    api: ((...args: any[]) => Promise<T>), 
-    initialState?: T, 
-    options: UseAsyncStateOptions<Shallow> = {
-      immediate: false,
-      resetOnExecute: false
-    }
-  ) {
-    return useState.data(api, initialState, options)
   }
 }

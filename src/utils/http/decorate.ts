@@ -4,8 +4,8 @@
  * @description 根据某些场景做一些处理
  */
 
+import API from "./api";
 import _ from "lodash-es";
-import { Http } from "./http";
 import type { AxiosRequestConfig } from "axios";
 
 type Fun = <T>(...args: any[]) => Promise<T>;
@@ -40,7 +40,7 @@ const makeValue = function(app: Fun) {
  * @param config Axios 配置
  */
 export const get = function (url: string, config?: AxiosRequestConfig) {
-  const http = new Http(config);
+  const api = new API(config);
   return function (target: any, methodName: string, descriptor: PropertyDescriptor) {
     // 缓存被装饰得函数
     const configure = makeValue(descriptor.value);
@@ -52,7 +52,7 @@ export const get = function (url: string, config?: AxiosRequestConfig) {
         params: data.params
       });
       // 发起请求
-      const result = await http.get(url, option);
+      const result = await api.get(url, option);
       // 判断是否有回调函数
       if (data.callback && typeof data.callback === "function") {
         return data.callback.call(this, result);
@@ -69,7 +69,7 @@ export const get = function (url: string, config?: AxiosRequestConfig) {
  * @param config Axios 配置
  */
 export const post = function (url: string, config?: AxiosRequestConfig) {
-  const http = new Http(config);
+  const api = new API(config);
   return function (target: any, methodName: string, descriptor: PropertyDescriptor) {
     const configure = makeValue(descriptor.value);
     descriptor.value = async function (...args: any[]) {
@@ -77,7 +77,7 @@ export const post = function (url: string, config?: AxiosRequestConfig) {
       const option = Object.assign({}, data.config ? data.config : {}, { 
         params: data.params || {}
       });
-      const result = await http.post(url, data.data, option);
+      const result = await api.post(url, data.data, option);
       if (data.callback && typeof data.callback === "function") {
         return data.callback.call(this, result);
       }
