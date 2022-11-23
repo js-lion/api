@@ -7,7 +7,7 @@ export default defineConfig({
   build: {
     target: "modules",
     lib: {
-      entry: "src/utils/http/index.ts",
+      entry: "src/libs/api/index",
       name: "api",
       formats: ["es"],
       fileName: "api"
