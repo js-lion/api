@@ -40,11 +40,11 @@ const makeValue = function(app: Fun) {
  * @param config Axios 配置
  */
 export const get = function (url: string, config?: AxiosRequestConfig) {
-  const api = new API(config);
   return function (target: any, methodName: string, descriptor: PropertyDescriptor) {
     // 缓存被装饰得函数
     const configure = makeValue(descriptor.value);
     descriptor.value = async function (...args: any[]) {
+      const api = new API(config);
       // 拿到配置数据
       const data = await configure.call(this, args);
       // 拼接请求参数
@@ -69,10 +69,10 @@ export const get = function (url: string, config?: AxiosRequestConfig) {
  * @param config Axios 配置
  */
 export const post = function (url: string, config?: AxiosRequestConfig) {
-  const api = new API(config);
   return function (target: any, methodName: string, descriptor: PropertyDescriptor) {
     const configure = makeValue(descriptor.value);
     descriptor.value = async function (...args: any[]) {
+      const api = new API(config);
       const data = await configure.call(this, args);
       const option = Object.assign({}, data.config ? data.config : {}, { 
         params: data.params || {}

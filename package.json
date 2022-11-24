@@ -26,6 +26,7 @@
     "lion/api",
     "axios"
   ],
+  "dependencies": {},
   "devDependencies": {
     "@types/lodash-es": "^4.17.6",
     "@vitejs/plugin-vue": "^3.2.0",

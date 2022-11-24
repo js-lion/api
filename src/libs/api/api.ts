@@ -11,9 +11,10 @@ import type { Axios, AxiosRequestConfig, AxiosResponse } from "axios";
 type reqCallback = (req: AxiosRequestConfig) => AxiosRequestConfig;
 type resCallback = (res: AxiosResponse) => AxiosResponse;
 
-const request = new Set<reqCallback>();
-const response = new Set<resCallback>();
+const requestList: reqCallback[] = [];
+const responseList: resCallback[] = [];
 const env = new Map<string, string | number>();
+const axiosConfig: AxiosRequestConfig = {};
 
 class Basis {
   public env: object;
@@ -24,12 +25,12 @@ class Basis {
   }
   static addRequest(callback: reqCallback) {
     if (callback) {
-      request.add(callback);
+      requestList.push(callback);
     }
   }
   static addResponse(callback: resCallback) {
     if (callback) {
-      response.add(callback);
+      responseList.push(callback);
     }
   }
   static setEnv (data = {}) {
@@ -38,6 +39,9 @@ class Basis {
       const value = data[key];
       env.set(key, value);
     }
+  }
+  static setConfig (config: AxiosRequestConfig = {}) {
+     Object.assign(axiosConfig, config);
   }
   async CallbackError(value: any) {
     const code: number = _.get<object, string>(value, "code");
@@ -73,14 +77,14 @@ class Basis {
       timeout: 1000 * 5, // 超时时间
       maxRedirects: 3,   // 支持三次重定向
       withCredentials: false,
-    }, config);
+    }, axiosConfig, config);
     const axios = AxiosHttp.create(option);
     // 响应时拦截
     axios.interceptors.request.use(this.requestCallback, this.CallbackError);
-    for (const callback of request) {
+    for (const callback of requestList) {
       axios.interceptors.request.use(callback, this.CallbackError);
     }
-    for (const callback of response) {
+    for (const callback of responseList) {
       axios.interceptors.response.use(callback, this.CallbackError);
     }
     return axios;
