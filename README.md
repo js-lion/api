@@ -108,6 +108,11 @@ API.setEnv({
   // 配置全局的变量，用于 url 宏变量替换
 });
 
+API.setConfig({
+  baseURL: "/",
+  // 配置全局的 Axios Config
+});
+
 API.addRequest(function(req: AxiosRequestConfig) {
   // 请求前处理
   return req;
@@ -123,7 +128,6 @@ class Http extends API {
   constructor() {
     // 配置 Axios 默认参数
     const config: AxiosRequestConfig = {
-      baseURL: "/",
       // todo
     };
     super(config);
