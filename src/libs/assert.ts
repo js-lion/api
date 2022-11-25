@@ -11,10 +11,8 @@
    if (callback && _.isFunction(callback)) {
      // @ts-ignore
      return callback.apply(this, args);
-   } else if (callback) {
-     return callback;
    }
-   return void 0;
+   return callback;
  };
  
  

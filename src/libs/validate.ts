@@ -4,6 +4,7 @@
  */
 
 import _ from "lodash-es";
+import "reflect-metadata";
 
 const requiredMetadataKey = Symbol("required");
 
@@ -25,7 +26,9 @@ export const validate = function (target: any, propertyName: string, descriptor:
     if (requiredParameters) {
       for (const parameterIndex of requiredParameters) {
         if (parameterIndex >= args.length || _.isEmpty(args[parameterIndex])) {
-          throw new Error("Missing required argument.");
+          const message = new Error("Missing required argument.");
+          console.log(message);
+          throw message;
         }
       }
     }

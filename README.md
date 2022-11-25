@@ -15,17 +15,17 @@
 
 **Npm**
 ```
-$ npm install @js-lion/api lodash-es axios
+$ npm install @js-lion/api lodash-es axios reflect-metadata
 ```
 
 **yarn**
 ```
-$ yarn add @js-lion/api lodash-es axios
+$ yarn add @js-lion/api lodash-es axios reflect-metadata
 ```
 
 **pnpm**
 ```
-$ pnpm install @js-lion/api lodash-es axios
+$ pnpm install @js-lion/api lodash-es axios reflect-metadata
 ```
 
 **可以通过 import 导入方式使用**
@@ -131,6 +131,39 @@ class Http extends API {
       // todo
     };
     super(config);
+  }
+}
+```
+
+## 装饰器列表
+
+装饰器名称 | 描述
+-- | --
+@get | 创建一个 Http Get 请求
+@post | 创建一个 Http Post 请求
+@validate | 对方法的参数断言
+@required | 设置参数为必填，不允许为空
+@tryError | 监听方法异常，异常时返回默认值
+
+
+```
+import { API, get, validate, required, tryError } from "@js-lion/api";
+
+class Http extends API {
+  @get("/user/:id")
+  @validate
+  getUserInfo<T = UserInfo>(@required userId: string | number): Promise<T> {
+    // todo
+  }
+  @tryError(false)
+  @post("/user/create")
+  createUser(data: UserInfo): Promise<boolean> {
+    // 处理接口返回的数据，按业务需求进行处理
+    const callback = function(result: object) {
+      // todo
+      return true;
+    };
+    return { data, callback } as any;
   }
 }
 ```

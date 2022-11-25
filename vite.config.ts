@@ -15,7 +15,13 @@ export default defineConfig({
     sourcemap: true,
     manifest: false,
     rollupOptions: {
-      external: ["vue", "lodash-es", "axios", "@vueuse/core"],
+      external: [
+        "vue", 
+        "axios", 
+        "lodash-es",
+        "@vueuse/core",
+        "reflect-metadata"
+      ],
       output: {
         inlineDynamicImports: true
       }
