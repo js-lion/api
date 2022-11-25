@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "types": "tsc --declaration --outDir types src/libs/api/index"
+    "types": "tsc --declaration --outDir types src/libs/index"
   },
   "repository": {
     "type": "git",
@@ -26,7 +26,9 @@
     "lion/api",
     "axios"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  },
   "devDependencies": {
     "@types/lodash-es": "^4.17.6",
     "@vitejs/plugin-vue": "^3.2.0",
