@@ -3,34 +3,53 @@
  * @author svon.me@gmail.com
  */
 
-import _ from "lodash-es";
+import _, { reject } from "lodash-es";
 import AxiosHttp from "axios";
 import { regExpTest, template } from "./template";
 import type { Axios, AxiosRequestConfig, AxiosResponse } from "axios";
 
-type reqCallback = (req: AxiosRequestConfig) => AxiosRequestConfig;
-type resCallback = (res: AxiosResponse) => AxiosResponse;
+type reqHook = (req: AxiosRequestConfig) => AxiosRequestConfig;
+type resHook = (res: AxiosResponse) => AxiosResponse;
+type useReject = ((error: any) => any) | ((error: any) => Promise<any>);
 
-const requestList: reqCallback[] = [];
-const responseList: resCallback[] = [];
+const requestList: Array<Array<reqHook | useReject>> = [];
+const responseList: Array<Array<resHook | useReject>> = [];
 const env = new Map<string, string | number>();
 const axiosConfig: AxiosRequestConfig = {};
+
+
+const CallbackError = function(value: any) {
+  const code: number = _.get<object, string>(value, "code");
+  if (code === 0) {
+    return value;
+  }
+  return Promise.reject(value);
+}
 
 class Basis {
   public env: object;
   constructor(value = {}) {
     this.env = value;
-    this.CallbackError = this.CallbackError.bind(this);
     this.requestCallback = this.requestCallback.bind(this);
   }
-  static addRequest(callback: reqCallback) {
-    if (callback) {
-      requestList.push(callback);
+  /**
+   * 设置响应前拦截器
+   * @param hook 
+   * @param reject 
+   */
+  static addRequest(hook: reqHook, reject?: useReject) {
+    if (hook) {
+      requestList.push([hook, reject || CallbackError]);
     }
   }
-  static addResponse(callback: resCallback) {
-    if (callback) {
-      responseList.push(callback);
+  /**
+   * 设置响应后拦截器
+   * @param hook 
+   * @param reject 
+   */
+  static addResponse(hook: resHook, reject?: useReject) {
+    if (hook) {
+      responseList.push([hook, reject || CallbackError]);
     }
   }
   static setEnv (data = {}) {
@@ -42,13 +61,6 @@ class Basis {
   }
   static setConfig (config: AxiosRequestConfig = {}) {
      Object.assign(axiosConfig, config);
-  }
-  async CallbackError(value: any) {
-    const code: number = _.get<object, string>(value, "code");
-    if (code === 0) {
-      return value;
-    }
-    return Promise.reject(value);
   }
   // 响应前拦截
   async requestCallback(req: AxiosRequestConfig) {
@@ -80,12 +92,12 @@ class Basis {
     }, axiosConfig, config);
     const axios = AxiosHttp.create(option);
     // 响应时拦截
-    axios.interceptors.request.use(this.requestCallback, this.CallbackError);
-    for (const callback of requestList) {
-      axios.interceptors.request.use(callback, this.CallbackError);
+    axios.interceptors.request.use(this.requestCallback, CallbackError);
+    for (const [callback, reject] of requestList) {
+      axios.interceptors.request.use(callback, reject);
     }
-    for (const callback of responseList) {
-      axios.interceptors.response.use(callback, this.CallbackError);
+    for (const [callback, reject] of responseList) {
+      axios.interceptors.response.use(callback, reject);
     }
     return axios;
   }

@@ -116,11 +116,17 @@ API.setConfig({
 API.addRequest(function(req: AxiosRequestConfig) {
   // 请求前处理
   return req;
+}, function(error: any) {
+  // 处理异常，可省略
+  return error;
 });
 
 API.addResponse(function(res: AxiosResponse) {
   // 请求完成时处理
   return res;
+}, function(error: any) {
+  // 处理异常，可省略
+  return error;
 });
 
 
