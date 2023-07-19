@@ -63,22 +63,23 @@ class Basis {
      Object.assign(axiosConfig, config);
   }
   // 响应前拦截
-  async requestCallback(req: AxiosRequestConfig) {
+  requestCallback(req: AxiosRequestConfig) {
     // 替换 url 中的宏变量
     if (req.url && regExpTest(req.url)) {
-      
       const data = Object.assign({}, Object.fromEntries(env), this.env, req.params || {});
-      if (req.data && (req.data instanceof FormData === false)) {
-        Object.assign(data, req.data);
-      }
-
-      req.url = template(req.url, function($1: string, $2: string) {
-        const value = _.get<object, string>(data, $2);
-        if (value && _.isString(value) && value.includes("/")) {
-          return value;
+      const omits: string[] = [];
+      req.url = template(req.url, function($1: string, key: string) {
+        if (data.hasOwnProperty(key)) {
+          omits.push(key);
+          const value = data[key];
+          if (value && _.isString(value) && /^https?:|^\//i.test(value)) {
+            return value;
+          }
+          return `/${value}`;
         }
-        return `/${value}`;
+        return $1;
       });
+      req.params = _.omit(req.params || {}, omits);
     }
     return req;
   }
@@ -92,9 +93,9 @@ class Basis {
     }, axiosConfig, config);
     const axios = AxiosHttp.create(option);
     // 响应时拦截
-    axios.interceptors.request.use(this.requestCallback, CallbackError);
+    axios.interceptors.request.use(this.requestCallback as any, CallbackError);
     for (const [callback, reject] of requestList) {
-      axios.interceptors.request.use(callback, reject);
+      axios.interceptors.request.use(callback as any, reject);
     }
     for (const [callback, reject] of responseList) {
       axios.interceptors.response.use(callback, reject);
