@@ -2,7 +2,7 @@
  * @file 装饰器
  * @author svon.me@gmail.com
  */
- import _ from "lodash-es";
+ import * as _ from "lodash-es";
 
  export type ErrCatch = (e: Error, ...args: any[]) => void;
  

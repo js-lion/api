@@ -11,6 +11,7 @@ node_modules
 dist
 types
 dist-ssr
+pnpm-lock.yaml
 *.local
 
 # Editor directories and files

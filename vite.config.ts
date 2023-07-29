@@ -1,9 +1,8 @@
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [],
   build: {
     target: "modules",
     lib: {
@@ -16,10 +15,8 @@ export default defineConfig({
     manifest: false,
     rollupOptions: {
       external: [
-        "vue", 
         "axios", 
         "lodash-es",
-        "@vueuse/core",
         "reflect-metadata"
       ],
       output: {

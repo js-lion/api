@@ -10,15 +10,15 @@ type Replace = (key: string) => string;
  * @returns /{([\w]+)}/g
  */
 export const regExpA = function() {
-  return /{([\w]+)}/g;
+  return /{([\w-]+)}/ig;
 }
 
 /**
  * 创建模板匹配规则
- * @returns /\/:(\w+)/ig
+ * @returns /\/:(\w-)+/ig
  */
 export const regExpB = function() {
-  return /\/:(\w+)/ig;
+  return /\/:([\w-]+)/ig;
 }
 
 /**
