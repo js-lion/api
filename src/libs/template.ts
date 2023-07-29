@@ -18,7 +18,7 @@ export const regExpA = function() {
  * @returns /\/:(\w-)+/ig
  */
 export const regExpB = function() {
-  return /\/:(\w-)+/ig;
+  return /\/:([\w-]+)/ig;
 }
 
 /**

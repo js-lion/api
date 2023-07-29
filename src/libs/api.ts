@@ -3,7 +3,7 @@
  * @author svon.me@gmail.com
  */
 
-import _, { reject } from "lodash-es";
+import * as _ from "lodash-es";
 import AxiosHttp from "axios";
 import { regExpTest, template } from "./template";
 import type { Axios, AxiosRequestConfig, AxiosResponse } from "axios";

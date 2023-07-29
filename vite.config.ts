@@ -15,10 +15,8 @@ export default defineConfig({
     manifest: false,
     rollupOptions: {
       external: [
-        "vue", 
         "axios", 
         "lodash-es",
-        "@vueuse/core",
         "reflect-metadata"
       ],
       output: {

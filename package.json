@@ -1,7 +1,7 @@
 {
   "name": "@js-lion/api",
   "private": false,
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "简化 Http 请求, 不会对 Axios 做任何改变",
   "main": "dist/api.js",
   "type": "module",
@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "types": "tsc --declaration --outDir types src/libs/index"
+    "types": "node scripts/types.cjs"
   },
   "repository": {
     "type": "git",
@@ -33,9 +33,9 @@
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.6",
+    "shelljs": "^0.8.5",
     "typescript": "^4.9.4",
-    "vite": "^4.4.4",
-    "vue": "^3.3.4"
+    "vite": "^4.4.7"
   },
   "files": [
     "dist/",

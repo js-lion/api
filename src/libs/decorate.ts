@@ -5,7 +5,7 @@
  */
 
 import API from "./api";
-import _ from "lodash-es";
+import * as _ from "lodash-es";
 import type { AxiosRequestConfig } from "axios";
 
 type Fun = <T>(...args: any[]) => Promise<T>;
