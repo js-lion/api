@@ -1,7 +1,7 @@
 {
   "name": "@js-lion/api",
   "private": false,
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "简化 Http 请求, 不会对 Axios 做任何改变",
   "main": "dist/api.js",
   "type": "module",
@@ -14,8 +14,8 @@
     "url": "https://github.com/js-lion/api"
   },
   "scripts": {
-    "dev": "vite",
     "build": "vite build",
+    "postbuild": "npm run types",
     "types": "node scripts/types.cjs"
   },
   "repository": {
