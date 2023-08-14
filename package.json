@@ -1,7 +1,7 @@
 {
   "name": "@js-lion/api",
   "private": false,
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "简化 Http 请求, 不会对 Axios 做任何改变",
   "main": "dist/api.js",
   "type": "module",
@@ -32,6 +32,7 @@
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
+    "@js-lion/template": "^0.0.4",
     "@types/lodash-es": "^4.17.6",
     "shelljs": "^0.8.5",
     "typescript": "^4.9.4",
@@ -39,6 +40,7 @@
   },
   "files": [
     "dist/",
+    "src/",
     "types/",
     "LICENSE",
     "README.md",
