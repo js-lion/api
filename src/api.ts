@@ -5,7 +5,7 @@
 
 import * as _ from "lodash-es";
 import AxiosHttp from "axios";
-import { regExpTest, template } from "./template";
+import { regExpTest, template } from "@js-lion/template";
 import type { Axios, AxiosRequestConfig, AxiosResponse } from "axios";
 
 type reqHook = (req: AxiosRequestConfig) => AxiosRequestConfig;
@@ -72,10 +72,9 @@ class Basis {
         if (data.hasOwnProperty(key)) {
           omits.push(key);
           const value = data[key];
-          if (value && _.isString(value) && /^https?:|^\//i.test(value)) {
+          if (value) {
             return value;
           }
-          return `/${value}`;
         }
         return $1;
       });

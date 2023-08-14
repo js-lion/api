@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     target: "modules",
     lib: {
-      entry: "src/libs/index",
+      entry: "src/index",
       name: "api",
       formats: ["es"],
       fileName: "api"
