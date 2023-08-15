@@ -71,12 +71,8 @@ class Basis {
       req.url = template(req.url, function($1: string, key: string) {
         if (data.hasOwnProperty(key)) {
           omits.push(key);
-          const value = data[key];
-          if (value) {
-            return value;
-          }
+          return data[key];
         }
-        return $1;
       });
       req.params = _.omit(req.params || {}, omits);
     }
