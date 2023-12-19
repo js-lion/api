@@ -9,7 +9,7 @@ export type CatchValue = (e: Error, ...args: any[]) => void;
  * 监听异常
  * @param errCatch 异常时处理方式，发生异常时返回
  */
-export const tryError = function (catchValue?: CatchValue | string | number | object | Array<any>) {
+export const tryError = function (catchValue?: CatchValue | any) {
   return function (target: any, methodName: string, descriptor: PropertyDescriptor) {
     const app = descriptor.value;
     descriptor.value = async function (...args: any[]) {
