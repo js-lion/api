@@ -3,8 +3,8 @@
  * @author svon.me@gmail.com
  */
 
-import * as _ from "lodash-es";
 import "reflect-metadata";
+import * as _ from "lodash-es";
 
 const requiredMetadataKey = Symbol("required");
 
@@ -13,7 +13,7 @@ const isEmpty = function(value: any): boolean {
     return false;
   }
   // 空字符串与0在实际业务中属于有意义的数据
-  if (_.isString(value) || value === 0) {
+  if (typeof value === "string" || value === 0) {
     return false;
   }
   // 判断 undefined, null, NaN

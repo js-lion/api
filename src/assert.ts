@@ -2,34 +2,26 @@
  * @file 装饰器
  * @author svon.me@gmail.com
  */
- import * as _ from "lodash-es";
 
- export type ErrCatch = (e: Error, ...args: any[]) => void;
- 
- // 处理异常返回值
- const runCallback = function <T>(callback?: any, args: any[] = []): T | undefined {
-   if (callback && _.isFunction(callback)) {
-     // @ts-ignore
-     return callback.apply(this, args);
-   }
-   return callback;
- };
- 
- 
- /**
-  * 监听异常
-  * @param errCatch 异常时处理方式，发生异常时返回
-  */
- export const tryError = function (errCatch?: any) {
-   return function (target: any, methodName: string, descriptor: PropertyDescriptor) {
-     const app = descriptor.value;
-     descriptor.value = async function (...args: any[]) {
-       try {
-         return await app.apply(this, args);
-       } catch (e) {
-         return runCallback.call(this, errCatch, args);
-       }
-     };
-   };
- };
- 
+export type CatchValue = (e: Error, ...args: any[]) => void;
+
+/**
+ * 监听异常
+ * @param errCatch 异常时处理方式，发生异常时返回
+ */
+export const tryError = function (catchValue?: CatchValue | string | number | object | Array<any>) {
+  return function (target: any, methodName: string, descriptor: PropertyDescriptor) {
+    const app = descriptor.value;
+    descriptor.value = async function (...args: any[]) {
+      try {
+        return await app.apply(this, args);
+      } catch (e) {
+        if (catchValue && typeof catchValue === "function") {
+          // @ts-ignore
+          return catchValue.apply(this, [e, ...args]);
+        }
+        return catchValue;
+      }
+    };
+  };
+};

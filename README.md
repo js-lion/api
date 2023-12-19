@@ -130,7 +130,7 @@ API.addResponse(function(res: AxiosResponse) {
 });
 
 
-class Http extends API {
+class HttpApi extends API {
   constructor() {
     // 配置 Axios 默认参数
     const config: AxiosRequestConfig = {
@@ -145,31 +145,45 @@ class Http extends API {
 
 装饰器名称 | 描述
 -- | --
-@get | 创建一个 Http Get 请求
-@post | 创建一个 Http Post 请求
+@Get | 创建一个 Http Get 请求
+@Post | 创建一个 Http Post 请求
+@Put | 创建一个 Http Put 请求
+@Delete | 创建一个 Http Delete 请求
+@Http | 自定义创建一个 Http 请求
 @validate | 对方法的参数断言
 @required | 设置参数为必填，不允许为空
 @tryError | 监听方法异常，异常时返回默认值
 
 
 ```
-import { API, get, validate, required, tryError } from "@js-lion/api";
+import { Get, Post,  validate, required, tryError } from "@js-lion/api";
 
-class Http extends API {
-  @get("/user/:id")
+class HttpApi {
+  @Get("/user/:id")
   @validate
   getUserInfo<T = UserInfo>(@required userId: string | number): Promise<T> {
-    // todo
+    const params = { id: userId };
+    // @ts-ignore
+    return { params };
   }
+
   @tryError(false)
-  @post("/user/create")
+  @Post("/user/create")
   createUser(data: UserInfo): Promise<boolean> {
     // 处理接口返回的数据，按业务需求进行处理
     const callback = function(result: object) {
       // todo
       return true;
     };
-    return { data, callback } as any;
+    // @ts-ignore
+    return { data, callback };
+  }
+
+  @Http("Get", "/xxxx")
+  @validate
+  getUserInfo<T = UserInfo>(@required userId: string | number): Promise<T> {
+    // 同 Get 案例
   }
 }
+
 ```
