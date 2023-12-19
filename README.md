@@ -31,36 +31,37 @@ $ pnpm install @js-lion/api lodash-es axios reflect-metadata
 **可以通过 import 导入方式使用**
 
 ```
-import { API, get, post } from "@js-lion/api";
+import { API, Get, Post } from "@js-lion/api";
 ```
 
 **或则通过 require 导入方式使用**
 
 ```
-const { API, get, post } = require("@js-lion/api");
+const { API, Get, Post } = require("@js-lion/api");
 ```
 
 ## 案例
 
 ```
-import { API, get } from "@js-lion/api";
+import { API, Get } from "@js-lion/api";
 
 interface UserInfo {
   id?: string | number;
   nikeName?: string;
 }
 
-class Http extends API {
+class HttpApi extends API {
   // get 注解(装饰器)
-  @get("/user/:id")
+  @Get("/user/:id")
   getUserInfo<T = UserInfo>(userId: string | number): Promise<T> {
     // 准备请求参数
     const params = { id: userId };
     // 该返回值被注解接收用于发起 http 请求, 然后在将结果正常返回
-    return { params } as any;
+    // @ts-ignore
+    return { params };
   }
 
-  @post("/user/create")
+  @Post("/user/create")
   createUser(data: UserInfo): Promise<boolean> {
     // 处理接口返回的数据，按业务需求进行处理
     const callback = function(result: object) {
@@ -69,7 +70,8 @@ class Http extends API {
       return result ? true : false;
     };
     // 注解在发起 http 请求会，会将结果传给 callback 进行处理
-    return { data, callback } as any;
+    // @ts-ignore
+    return { data, callback };
   }
 
   // 其余情况
@@ -128,7 +130,6 @@ API.addResponse(function(res: AxiosResponse) {
   // 处理异常，可省略
   return error;
 });
-
 
 class HttpApi extends API {
   constructor() {
