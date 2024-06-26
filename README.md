@@ -150,6 +150,7 @@ class HttpApi extends API {
 @Post | 创建一个 Http Post 请求
 @Put | 创建一个 Http Put 请求
 @Delete | 创建一个 Http Delete 请求
+@Gql | 创建一个 Http Post 请求 并以 graphql 规范传输数据
 @Http | 自定义创建一个 Http 请求
 @validate | 对方法的参数断言
 @required | 设置参数为必填，不允许为空

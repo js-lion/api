@@ -5,21 +5,21 @@
  */
 
 import API from "./api";
-import * as _ from "lodash-es";
-import type { AxiosRequestConfig, Method } from "axios";
+import {template} from "@js-lion/template";
+import type {AxiosRequestConfig, Method} from "axios";
 
 type Fun = <T>(...args: any[]) => Promise<T>;
 
 class MakeData {
   params?: object = {};
-  data?: object | FormData = {};
+  data?: string | object | FormData = {};
   callback?: Fun;
   config?: AxiosRequestConfig;
 }
 
 // 获取参数
-const makeValue = function(app: Fun) {
-  return async function(args: any[]): Promise<MakeData> {
+const makeValue = function (app: Fun) {
+  return async function (args: any[]): Promise<MakeData> {
     // @ts-ignore
     const self = this;
     const data = await Promise.resolve(app.apply(self, args));
@@ -27,7 +27,7 @@ const makeValue = function(app: Fun) {
       const params: object = data[0] || {};
       const callback: Fun = data[1];
       const config: AxiosRequestConfig = data[2] || {};
-      return { params, callback, config };
+      return {params, callback, config};
     }
     return data as MakeData;
   }
@@ -54,7 +54,7 @@ export const Http = function (method: Method | string, url: string, config?: Axi
       });
       // 发起请求
       let result;
-      switch(method.toUpperCase()) {
+      switch (method.toUpperCase()) {
         case "GET":
           result = await api.get(url, option);
           break;
@@ -77,10 +77,10 @@ export const Http = function (method: Method | string, url: string, config?: Axi
           result = await api.patch(url, data.data, option);
           break;
         default:
-          result = await api.request({ ...option, url, method, data: data.data });
+          result = await api.request({...option, url, method, data: data.data});
           break;
       }
-      
+
       // 判断是否有回调函数
       if (data.callback && typeof data.callback === "function") {
         return data.callback.call(this, result);
@@ -146,3 +146,37 @@ export const Delete = function (url: string, config?: AxiosRequestConfig) {
 export const Put = function (url: string, config?: AxiosRequestConfig) {
   return Http("PUT", url, config);
 };
+
+export const Gql = function (url: string, config?: AxiosRequestConfig) {
+  return function (target: any, methodName: string, descriptor: PropertyDescriptor) {
+    // 缓存被装饰得函数
+    const configure = makeValue(descriptor.value);
+    descriptor.value = async function (...args: any[]) {
+      const api = new API(config);
+      // 拿到配置数据
+      const data = await configure.call(this, args);
+      // 拼接请求参数
+      const option = Object.assign({}, data.config ? data.config : {}, {
+        params: data.params
+      });
+      let result;
+      if (data.data && typeof data.data === "string") {
+        const value: string = String(data.data).trim();
+        const graphql = option.params ? template(value, option.params) : value;
+        option.params = {};
+        // 发起请求
+        result = await api.post(url, {query: graphql}, option);
+      } else {
+        // 发起请求
+        result = await api.post(url, data.data, option);
+      }
+
+      // 判断是否有回调函数
+      if (data.callback && typeof data.callback === "function") {
+        return data.callback.call(this, result);
+      }
+      // 返回结果
+      return result;
+    };
+  };
+}
