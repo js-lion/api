@@ -71,7 +71,7 @@ export const Http = function (method: Method | string, url: string, config?: Axi
           result = await api.post(url, data.data, option);
           break;
         case "PUT":
-          result = await api.post(url, data.data, option);
+          result = await api.put(url, data.data, option);
           break;
         case "PATCH":
           result = await api.patch(url, data.data, option);
